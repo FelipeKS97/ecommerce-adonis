@@ -29,6 +29,7 @@
     "@adonisjs/validator": "^5.0.6",
     "@adonisjs/websocket": "^1.0.12",
     "adonis-acl": "^1.1.1",
+    "adonis-bumblebee": "^2.1.0",
     "mysql": "^2.18.1"
   },
   "devDependencies": {},
