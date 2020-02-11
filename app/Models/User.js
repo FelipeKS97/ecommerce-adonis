@@ -21,6 +21,12 @@ class User extends Model {
     })
   }
 
+  static get hidden () {
+
+    return ['name']
+
+  }
+
   static get traits () {
     return [
       '@provider:Adonis/Acl/HasRole',
@@ -40,6 +46,14 @@ class User extends Model {
    */
   tokens () {
     return this.hasMany('App/Models/Token')
+  }
+
+  image () {
+    this.belongsTo('App/Models/Image')
+  }
+
+  coupons () {
+    this.belongsToMany('App/Models/Coupon')
   }
 }
 
