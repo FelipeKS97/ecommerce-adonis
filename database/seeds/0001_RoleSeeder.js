@@ -12,8 +12,6 @@
 
 const Role = use('Role')
 
-// const Factory = use('Factory')
-
 class RoleSeeder {
   async run () {
 

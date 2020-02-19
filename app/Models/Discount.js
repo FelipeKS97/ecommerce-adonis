@@ -11,12 +11,12 @@ class Discount extends Model {
 
     // Relationship between Discount and Order
     order() {
-        this.belongsTo('App/Models/Order', 'order_id', 'id')
+        return this.belongsTo('App/Models/Order', 'order_id', 'id')
     }
 
     // Relationship between Discount and Coupon
     coupon() {
-        this.belongsTo('App/Models/Coupon', 'coupon_id', 'id')
+        return this.belongsTo('App/Models/Coupon', 'coupon_id', 'id')
     }
 }
 

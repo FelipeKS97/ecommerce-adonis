@@ -19,12 +19,12 @@ class OrderItem extends Model {
 
     // Relationship between OrderItem and Product
     product() {
-        this.belongsTo('App/Models/Product')
+        return this.belongsTo('App/Models/Product')
     }
 
     // Relationship between OrderItem and Order
     order() {
-        this.belongsTo('App/Models/Order')
+        return this.belongsTo('App/Models/Order')
     }
 }
 

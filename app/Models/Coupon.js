@@ -11,17 +11,17 @@ class Coupon extends Model {
 
     // Relationship between Coupons and Users
     users() {
-        this.belongsToMany('App/Models/User')
+       return this.belongsToMany('App/Models/User')
     }
 
     // Relationship between Coupons and Products
     products() {
-        this.belongsToMany('App/Models/Product')
+        return this.belongsToMany('App/Models/Product')
     }
 
     // Relationship between Coupons and Orders
     orders() {
-        this.belongsToMany('App/Models/Order')
+        return this.belongsToMany('App/Models/Order')
     }
 }
 

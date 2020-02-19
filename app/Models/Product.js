@@ -7,22 +7,22 @@ class Product extends Model {
 
     // Relationship between Product and Featured Image
     image() {
-        this.belongsTo('App/Model/Image')
+        return this.belongsTo('App/Models/Image')
     }
 
     // Relationship between Products and the Image Gallery
     images() {
-        this.belongsToMany('App/Model/Image')
+        return this.belongsToMany('App/Models/Image')
     }
 
     // Relationship between Products and Categories
     categories() {
-        this.belongsToMany('App/Model/Category')
+        return this.belongsToMany('App/Models/Category') //.pivotTable('category_product') //.pivotPrimaryKey(null)
     }
 
     // Relationship between Products and Coupons
     coupons () {
-        this.belongsToMany('App/Models/Coupon')
+        return this.belongsToMany('App/Models/Coupon')
     }
 }
 

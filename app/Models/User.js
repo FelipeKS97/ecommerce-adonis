@@ -21,11 +21,11 @@ class User extends Model {
     })
   }
 
-  static get hidden () {
+  // static get hidden () {
 
-    return ['name']
+  //   return ['password']
 
-  }
+  // }
 
   static get traits () {
     return [
@@ -50,12 +50,12 @@ class User extends Model {
   
   // Relationship between User and Image
   image () {
-    this.belongsTo('App/Models/Image')
+    return this.belongsTo('App/Models/Image')
   }
 
   // Relationship between Categories and Coupons
   coupons () {
-    this.belongsToMany('App/Models/Coupon')
+    return this.belongsToMany('App/Models/Coupon')
   }
 }
 

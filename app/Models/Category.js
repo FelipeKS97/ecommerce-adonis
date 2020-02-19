@@ -7,12 +7,12 @@ class Category extends Model {
 
     // Relationship between Category and Featured Image
     image() {
-        this.belongsTo('/App/Models/Image')
+        return this.belongsTo('App/Models/Image')
     }
 
      // Relationship between Categories and Products
     products() {
-        this.belongsToMany('/App/Models/Product')
+        return this.belongsToMany('App/Models/Product') //.pivotTable('category_product') //.pivotPrimaryKey(null)
     }
 
 }
