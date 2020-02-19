@@ -21,3 +21,4 @@ Route.get('/', () => {
 }).as('home')
 
 require('./auth')
+require('./admin')
