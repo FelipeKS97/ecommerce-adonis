@@ -5,7 +5,7 @@ const User = use('App/Models/User')
 const Role = use('Role')
 
 class AuthController {
-    async register({request, response}) {
+    async register({ request, response }) {
         const trx = await Database.beginTransaction()
 
         try {
@@ -31,7 +31,7 @@ class AuthController {
     }
 
     async login({ request, response, auth }) {
-        
+
         const {email, password} = request.all()
         let data = await auth.withRefreshToken().attempt(email, password)
 
@@ -39,11 +39,24 @@ class AuthController {
 
     }
 
-    async refresh({ request , response }) {
+    async refresh({ request, response }) {
+
+        const refresh_token = request.input('refresh_token') || request.header('refresh_token') 
+
+        const newToken = await auth.newRefreshToken().generateFromRefreshToken(refresh_token)
+
+        return response.send({ data: newToken })
 
     }
 
     async logout({ request, response, auth }){
+        const refresh_token = request.input('refresh_token') || request.header('refresh_token')
+        
+        await auth
+            .authenticator('jwt')
+            .revokeTokens([refresh_token], true)
+        
+        return response.status(204).send({})
 
     }
 
