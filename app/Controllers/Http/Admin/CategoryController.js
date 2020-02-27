@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Category = use('App/Models/Category')
+
 /**
  * Resourceful controller for interacting with categories
  */
@@ -16,8 +18,14 @@ class CategoryController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
+   * @param {object} ctx.pagination
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response, view, pagination }) {
+
+    const { page, limit } = pagination
+    const categories = await Category.query().paginate(page, limit)
+
+    return response.send(categories)
   }
 
   /**
