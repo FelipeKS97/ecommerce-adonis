@@ -82,13 +82,22 @@ class CategoryController {
    * @param {Response} ctx.response
    */
   async update ({ params: { id }, request, response }) {
-    
-    const category = await Category.findOrFail(id)
-    const { title, description, image_id } = request.all()
-    category.merge({ title, description, image_id })
-    await category.save()
 
-    return response.send(category)
+    const category = await Category.findOrFail(id)
+
+    try {
+      const { title, description, image_id } = request.all()
+      category.merge({ title, description, image_id })
+      await category.save()
+      
+      return response.send(category)
+      
+    } catch (error) {
+      
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })    
+    }
 
   }
 
@@ -103,8 +112,17 @@ class CategoryController {
   async destroy ({ params: { id }, request, response }) {
     
     const category = await Category.findOrFail(id)
-    await category.delete()
-    return response.status(204).send()
+
+    try {
+      await category.delete()
+      return response.status(204).send()
+      
+    } catch (error) {
+      
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })  
+    }
   }
 }
 
