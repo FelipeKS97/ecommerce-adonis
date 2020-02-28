@@ -16,8 +16,11 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
+   * @param {object} ctx.pagination
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response, pagination }) {
+
+    
   }
 
   /**
@@ -40,7 +43,7 @@ class ImageController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
   }
 
   /**
