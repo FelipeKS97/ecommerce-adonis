@@ -119,7 +119,7 @@ class CategoryController {
       
     } catch (error) {
       
-      return response.status(400).send({
+      return response.status(500).send({
         message: "Erro ao processar solicitação."
       })  
     }
