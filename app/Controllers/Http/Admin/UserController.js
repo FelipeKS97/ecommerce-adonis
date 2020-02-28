@@ -78,7 +78,7 @@ class UserController {
    */
   async show ({ params: { id }, request, response, view }) {
     
-    const user = await user.findOrFail(id)
+    const user = await User.findOrFail(id)
     return response.send(user)
   }
 
@@ -96,7 +96,7 @@ class UserController {
     try {
       const userData = request.only([
         'name',
-        'username',
+        'surname',
         'email',
         'password',
         'image_id'

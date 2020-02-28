@@ -20,11 +20,11 @@ Route.group(() => {
 
     // Users resource methods:
 
-    Route.resource('users', 'UsersController').apiOnly()
+    Route.resource('users', 'UserController').apiOnly()
 
     // Coupon resource methods:
 
-    Route.resource('coupon', 'CouponController').apiOnly()
+    Route.resource('coupons', 'CouponController').apiOnly()
 
     // Orders resource methods:
 
