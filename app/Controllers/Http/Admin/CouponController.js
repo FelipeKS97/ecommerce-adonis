@@ -6,6 +6,7 @@
 
 const Coupon = use('App/Models/Coupon')
 const Database = use('Database')
+const Service = use('App/Services/Coupon/CouponService')
 
 /**
  * Resourceful controller for interacting with coupons
@@ -48,12 +49,8 @@ class CouponController {
   async store ({ request, response }) {
 
     const trx = await Database.beginTransaction()
-
-    let can_use_for = {
-      client: false,
-      product: false
-    }
-
+    let canUseClient = false , canUseProduct = false
+    
     try {
       const couponData = request.only([
         'code',
@@ -66,15 +63,41 @@ class CouponController {
       ])
       
       const { users, products } = request.all()
-
       const coupon = Coupon.create(couponData, trx)
 
       // Service Layer starts
+      const service = new Service(coupon, trx)
 
-      
+      if(users && users.length > 0) {
+        await service.syncUsers(users)
+        canUseClient = true
+      }
+
+      if(products && products.length > 0) {
+        await service.syncProducts(products)
+        canUseProduct = true
+      }
+
+      if(canUseProduct && canUseClient) {
+        coupon.can_use_for = 'product_client'
+      } else if(!canUseProduct && canUseClient) {
+        coupon.can_use_for = 'client'
+      } else if(canUseProduct && !canUseClient) {
+        coupon.can_use_for = 'product'
+      } else {
+        coupon.can_use_for = 'all'
+      }
+
+      await coupon.save(trx)
+      await trx.commit()
+      return response.status(201).send(coupon)
 
     } catch (error) {
-      
+
+      await trx.rollback()
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })    
     }
 
   }
@@ -102,7 +125,63 @@ class CouponController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params: { id }, request, response }) {
+
+    const trx = await Database.beginTransaction()
+    const coupon = await Coupon.findOrFail(id) 
+    let canUseClient = false , canUseProduct = false
+
+    try {
+      const couponData = request.only([
+        'code',
+        'discount',
+        'valid_from',
+        'valid_until',
+        'quantity',
+        'type',
+        'recursive'
+      ])
+      const { users, products } = request.all()
+
+      coupon.merge(couponData)
+      
+      // Service Layer Starts
+
+      const service = new Service(coupon, trx)
+
+      if(users && users.length > 0) {
+        await service.syncUsers(users)
+        canUseClient = true
+      }
+
+      if(products && products.length > 0) {
+        await service.syncProducts(products)
+        canUseProduct = true
+      }
+
+      if(canUseProduct && canUseClient) {
+        coupon.can_use_for = 'product_client'
+      } else if(!canUseProduct && canUseClient) {
+        coupon.can_use_for = 'client'
+      } else if(canUseProduct && !canUseClient) {
+        coupon.can_use_for = 'product'
+      } else {
+        coupon.can_use_for = 'all'
+      }
+
+      await coupon.save(trx)
+      await trx.commit()
+
+      return response.send(coupon)
+
+    } catch (error) {
+
+      await trx.rollback()
+      
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })    
+    }
   }
 
   /**
