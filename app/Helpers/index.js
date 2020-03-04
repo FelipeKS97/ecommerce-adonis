@@ -81,11 +81,21 @@ const manage_multiple_uploads = async (fileJar, path = null) => {
     )
   
     return { successes, errors }
-  }
+}
+
+const isArrayNotEmpty = async (array) => {
+  if(Array.isArray(array) && array.length > 0) return true
+}
+
+const isArrayEmpty = async (array) => {
+  if(Array.isArray(array) && array.length < 1) return true
+}
 
 
 module.exports = {
     str_random,
     manage_single_upload,
-    manage_multiple_uploads
+    manage_multiple_uploads,
+    isArrayNotEmpty,
+    isArrayEmpty
 }

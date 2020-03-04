@@ -6,47 +6,26 @@ class CouponService {
         this.trx = trx
     }
 
-    async syncItems(items) {
-        if(!Array.isArray(coupons)) {
+    async syncUsers(users) {
+        if(!Array.isArray(users)) {
             return false
         }
-
-        await this.model.items().delete(this.trx)
-        await this.model.items().createMany(items)
+        await this.model.users().sync(users, null, this.trx)
     }
 
-    async uptadeItems(items) {
-        let currentItems = await this.model
-            .items()
-            .whereIn('id', items.map(item => item.id))
-            .fetch()
-
-        await this.model
-            .items()
-            .whereNotIn('id', items.map(item => item.id))
-            .delete(this.trx)
-
-        await Promise.all(
-            currentItems.rows.map(async item => {
-                item.fill(items.find(n => n.id === item.id))
-                await item.save(this.trx)
-            })
-        )
-    }
-
-    async syncCoupons(coupons) {
-        if(!Array.isArray(coupons)) {
+    async syncOrders(orders) {
+        if(!Array.isArray(orders)) {
             return false
         }
-        await this.model.coupons().sync(coupons, null, this.trx)
+        await this.model.orders().sync(orders, null, this.trx)
     }
 
-    // async syncProducts(products) {
-    //     if(!Array.isArray(products)) {
-    //         return false
-    //     }
-    //     await this.model.products().sync(products, null, this.trx)
-    // }
+    async syncProducts(products) {
+        if(!Array.isArray(products)) {
+            return false
+        }
+        await this.model.products().sync(products, null, this.trx)
+    }
 }
 
 module.exports = CouponService

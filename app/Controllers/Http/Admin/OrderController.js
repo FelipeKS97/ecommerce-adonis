@@ -6,6 +6,7 @@
 
 const Order = use('App/Models/Order')
 const Database = use('Database')
+const Service = use('App/Services/Order/OrderService')
 
 /**
  * Resourceful controller for interacting with orders
@@ -49,6 +50,27 @@ class OrderController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const trx = await Database.beginTransaction()
+    
+    try {
+      const { user_id, items, status } = request.all()
+      let order = await Order.create({ user_id, status }, trx)
+      
+      // Starts Service Layer
+      const service = new Service(order, trx)
+
+      if(items && items.length > 0) await service.syncItems(items)
+      await trx.commit()
+
+      response.status(201).send(order)
+
+    } catch (error) {
+
+      await trx.rollback()
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })
+    }
   }
 
   /**
@@ -75,7 +97,31 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params: { id }, request, response }) {
+
+    const order = await Order.findOrFail(id)
+    const trx =  Database.beginTransaction()
+
+    try {
+      
+      const { status, items, user_id } = request.all()
+      order.merge({ status, items, user_id })
+
+      //Start Service Layer
+      const service = new Service(order, trx)
+      await service.updateItems(items)
+      await order.save(trx)
+      await trx.commit()
+      
+      return response.send(order)
+    } catch (error) {
+      
+      await trx.rollback()
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })    
+    }
+
   }
 
   /**
