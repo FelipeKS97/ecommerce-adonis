@@ -27,7 +27,9 @@ Route.group(() => {
     Route.resource('coupons', 'CouponController').apiOnly()
 
     // Orders resource methods:
-
+    
+    Route.post('orders/:id/discount', 'OrderController.applyDiscount')
+    Route.delete('orders/:id/discount', 'OrderController.removeDiscount')
     Route.resource('orders', 'OrderController').apiOnly()
 
 }).prefix('v1/admin')

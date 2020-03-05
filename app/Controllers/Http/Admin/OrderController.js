@@ -202,8 +202,17 @@ class OrderController {
     
   }
 
+   /**
+   * Remove a discount to an order with discount_id.
+   * DELETE Method
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+
   async removeDiscount ({ request, response }) {
-    
+
     const { discount_id } = request.all()
     const discount = await Discount.findOrFail(discount_id)
     await discount.delete()
