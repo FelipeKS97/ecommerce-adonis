@@ -20,7 +20,7 @@ DiscountHook.calculateValues = async (model) => {
         .pluck('product_id')
         
         discountItems = await Database
-        .from('order_item')
+        .from('order_items')
         .where('order_id', model.order_id)
         .whereIn('product_id', couponProducts)
 

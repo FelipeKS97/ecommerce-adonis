@@ -5,6 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Order = use('App/Models/Order')
+const Coupon = use('App/Models/Coupon')
+const Discount = use('App/Models/Discount')
 const Database = use('Database')
 const Service = use('App/Services/Order/OrderService')
 
@@ -153,6 +155,64 @@ class OrderController {
       })  
     }
   }
+
+  /**
+   * Apply a discount to an order with id.
+   * POST Method
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async applyDiscount ({ params: { id }, request, response }) {
+
+    const { code } = request.all()
+    const coupon = Coupon.findByOrFail('code', code.toUpperCase())
+    const order = Order.findOrFail(id)
+
+    let discount = {}, 
+    info = {}
+
+    // Start Service Layer
+    try {
+      const service = new Service(order)
+      const orderDiscounts = await order.coupons().getCount()
+      const canAddDiscount = await service.canApplyDiscount()
+      const canApplyToOrder = orderDiscounts < 1 || (orderDiscounts >= 1 && coupon.recursive)
+
+      if(canAddDiscount && canApplyToOrder) {
+        discount = Discount.findOrCreate({
+          order_id: order.id,
+          coupon_id: coupon.id
+        })
+        info.message = 'Cupom aplicado com sucesso!'
+        info.success = true
+      } else {
+        info.message = 'Falha ao aplicar o cupom!'
+        info.success = false
+      }
+
+      return response.send({ order, info })
+
+    } catch (error) {
+      return response.status(400).send({
+        message: "Erro ao aplicar o cupom."
+      })
+    }
+    
+  }
+
+  async removeDiscount ({ request, response }) {
+    
+    const { discount_id } = request.all()
+    const discount = await Discount.findOrFail(discount_id)
+    await discount.delete()
+
+    return response.status(204).send()
+
+  }
+
+
 }
 
 module.exports = OrderController
