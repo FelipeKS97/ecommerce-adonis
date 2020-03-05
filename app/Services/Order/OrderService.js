@@ -38,14 +38,29 @@ class CouponService {
     }
 
     async canApplyDiscount(coupon) {
+
+        // Verify date from coupon
+        const now = new Date.getTime()
+
+        const { valid_until, valid_from, id } = coupon
+
+        if(now > valid_from.getTime() || (typeof valid_until === 'object' && now > valid_until.getTime())) {
+            /**
+             * Verifies if a coupon is already valid from now
+             * Verifies if it has an expiration date
+             * if has an expiration date, verifies if the coupon is already expired
+             */
+            return false
+        }
+
         const CouponProducts = await Database
         .from('coupon_product')
-        .where('coupon_id', coupon.id)
+        .where('coupon_id', id)
         .pluck('product_id')
 
         const CouponClients = await Database
         .from('coupon_user')
-        .where('coupon_id', coupon.id)
+        .where('coupon_id', id)
         .pluck('user_id')
 
         
