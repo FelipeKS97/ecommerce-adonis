@@ -25,7 +25,12 @@ Route.group(() => {
 
     // Users resource methods:
 
-    Route.resource('users', 'UserController').apiOnly()
+    Route.resource('users', 'UserController')
+    .apiOnly()
+    .validator(new Map([
+      [['users.store'], ['Admin/StoreUser']],
+      [['users.update'], ['Admin/StoreUser']],
+    ]))
 
     // Coupon resource methods:
 
