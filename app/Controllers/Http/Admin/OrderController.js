@@ -21,10 +21,10 @@ class OrderController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {object} ctx.paginate
+   * @param {object} ctx.pagination
    */
-  async index ({ request, response, paginate }) {
-    const { page, limit } = paginate
+  async index ({ request, response, pagination }) {
+    const { page, limit } = pagination
     const { status, id } = request.all()
     const query = Order.query()
     
