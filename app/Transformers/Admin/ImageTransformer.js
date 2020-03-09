@@ -19,7 +19,10 @@ class ImageTransformer extends BumblebeeTransformer {
     return {
      // add your transformation object here
       id: model.id,
-      url: model.url
+      url: model.url,
+      size: mode.size,
+      original_name: model.original_name,
+      extension: model.extension
     }
   }
 }
