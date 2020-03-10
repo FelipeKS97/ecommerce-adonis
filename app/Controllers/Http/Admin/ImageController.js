@@ -10,6 +10,7 @@ const {
   manage_single_upload, 
   manage_multiple_uploads
 } = use('App/Helpers')
+const Helpers = use('Helpers')
 
 const fs = use('fs')
 
