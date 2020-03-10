@@ -33,7 +33,7 @@ class UserController {
       query.orWhere('email', 'LIKE', `%${name}%`)
     }
     let users = await query.paginate(page, limit)
-    users = transform.paginate(users, Transformer)
+    users = await transform.paginate(users, Transformer)
 
     return response.send(users)
   }
@@ -59,7 +59,7 @@ class UserController {
       ])
   
       let user = await User.create(userData)
-      user = transform.item(user, Transformer)
+      user = await transform.item(user, Transformer)
   
       return response.status(201).send(user)
 
@@ -83,7 +83,7 @@ class UserController {
   async show ({ params: { id }, response, transform }) {
     
     let user = await User.findOrFail(id)
-    user = transform.item(user, Transformer)
+    user = await transform.item(user, Transformer)
     return response.send(user)
   }
 
@@ -109,7 +109,7 @@ class UserController {
       ])
       user.merge(userData)
       await user.save()
-      user = transform.item(user, Transformer)
+      user = await transform.item(user, Transformer)
 
       return response.send(user)
 
