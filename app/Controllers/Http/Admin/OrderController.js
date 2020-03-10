@@ -179,12 +179,13 @@ class OrderController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {TransformWith} ctx.transform
    */
-  async applyDiscount ({ params: { id }, request, response }) {
+  async applyDiscount ({ params: { id }, request, response, transform }) {
 
     const { code } = request.all()
     const coupon = Coupon.findByOrFail('code', code.toUpperCase())
-    const order = Order.findOrFail(id)
+    let order = Order.findOrFail(id)
 
     let discount = {}, 
     info = {}
@@ -207,6 +208,10 @@ class OrderController {
         info.message = 'Falha ao aplicar o cupom!'
         info.success = false
       }
+
+      order = await transform
+        .include('user,items,discounts,coupons')
+        .item(order, Transformer)
 
       return response.send({ order, info })
 
