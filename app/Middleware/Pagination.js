@@ -14,8 +14,8 @@ class Pagination {
     const { request } = ctx
 
     if(request.method() === 'GET') {
-      const page = parseInt(request.input('page'))
-      const limit =  parseInt(request.input('perpage')) ||  parseInt(request.input('limit'))
+      const page = request.input('page') ?  parseInt(request.input('page')) : 1
+      const limit = request.input('limit') || request.input('perpage') ? parseInt(request.input('perpage')) ||  parseInt(request.input('limit')) : 20
 
       ctx.pagination = { 
         page, 
