@@ -21,6 +21,17 @@ class User extends Model {
     })
   }
 
+  static get hidden () {
+    return ['password']
+  }
+
+  static get traits () {
+    return [
+      '@provider:Adonis/Acl/HasRole',
+      '@provider:Adonis/Acl/HasPermission'
+    ]
+  }
+
   /**
    * A relationship on tokens is required for auth to
    * work. Since features like `refreshTokens` or
@@ -33,6 +44,16 @@ class User extends Model {
    */
   tokens () {
     return this.hasMany('App/Models/Token')
+  }
+  
+  // Relationship between User and Image
+  image () {
+    return this.belongsTo('App/Models/Image')
+  }
+
+  // Relationship between Categories and Coupons
+  coupons () {
+    return this.belongsToMany('App/Models/Coupon')
   }
 }
 
